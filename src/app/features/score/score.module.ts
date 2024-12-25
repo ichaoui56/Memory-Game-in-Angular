@@ -7,9 +7,9 @@ import { ScoreDisplayComponent } from './components/score-display/score-display.
 
 @NgModule({
   declarations: [
-    ScoreDisplayComponent
   ],
   imports: [
+    ScoreDisplayComponent,
     CommonModule,
     ScoreRoutingModule
   ]

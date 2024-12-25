@@ -8,10 +8,10 @@ import { SequenceDisplayComponent } from './components/sequence-display/sequence
 
 @NgModule({
   declarations: [
-    GameBoardComponent,
-    SequenceDisplayComponent
   ],
   imports: [
+    GameBoardComponent,
+    SequenceDisplayComponent,
     CommonModule,
     GameRoutingModule
   ]

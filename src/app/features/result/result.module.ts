@@ -7,10 +7,10 @@ import { ResultScreenComponent } from './components/result-screen/result-screen.
 
 @NgModule({
   declarations: [
-    ResultScreenComponent
   ],
   imports: [
     CommonModule,
+    ResultScreenComponent,
     ResultRoutingModule
   ]
 })
