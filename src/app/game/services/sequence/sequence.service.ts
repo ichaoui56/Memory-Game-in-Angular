@@ -24,13 +24,11 @@ export class SequenceService {
     'E',
     'F',
   ];
+  private currentLength: number = 2; // Initial length
 
   constructor() {}
 
   getSequence(): sequenceType[] {
-    if (this.sequence.length < 2){
-      this.ajouterCouleur()
-    }
     return [...this.sequence];
   }
 
@@ -50,6 +48,18 @@ export class SequenceService {
 
   resetGame(): void {
     this.sequence = [];
+  }
+
+  resetSequence(): void {
+    this.sequence = [];
+    this.currentLength = 2; // Reset to initial length
+    this.generateInitialSequence();
+  }
+
+  private generateInitialSequence(): void {
+    for (let i = 0; i < this.currentLength; i++) {
+      this.ajouterCouleur();
+    }
   }
 
   private getCharacter(index: number): string {

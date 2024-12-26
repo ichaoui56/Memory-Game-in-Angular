@@ -21,6 +21,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   activeCardIndex: number | null = null;
   private countdownInterval?: number;
   private sequenceStartTime?: number;
+  highScore: number = 0;
 
   constructor(
     private gameService: GameService,
@@ -29,6 +30,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   ) {
     this.gameSettings = this.gameService.getGameSettings();
     this.countdown = this.gameSettings.countdownDuration;
+    this.highScore = this.scoreService.getCurrentHighScore();
   }
 
   ngOnInit(): void {
@@ -37,6 +39,13 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         this.gameState = state;
       })
     );
+
+    this.subscription.add(
+      this.scoreService.getHighScore().subscribe(score => {
+        this.highScore = score;
+      })
+    );
+
     this.startGame();
   }
 
@@ -46,6 +55,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   startGame(): void {
+    this.sequenceService.resetSequence();
     this.gameService.resetGame();
     this.startNextLevel();
   }
@@ -88,7 +98,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   private generateNewSequence(): void {
-    this.sequenceService.ajouterCouleur();
+    if (this.gameState.currentLevel > 1) {
+      this.sequenceService.ajouterCouleur();
+    }
     const sequence = this.sequenceService.getSequence();
     const shuffledSequence = this.gameService.shuffleSequence([...sequence]);
     this.gameService.updateState({ sequence: shuffledSequence });

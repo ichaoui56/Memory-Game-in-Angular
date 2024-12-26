@@ -24,4 +24,9 @@
   font-size: 1.5em;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.high-score {
+  color: #ffd700;
+  font-weight: bold;
 } 

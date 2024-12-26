@@ -1,14 +1,18 @@
-<div class="score-state">
-  <div class="timer">
-    <p>Time Left: {{ countdown }}s</p>
+<div class="score-container">
+  <div class="score-item">
+    <span class="label">Score:</span>
+    <span class="value">{{score}}</span>
   </div>
-  
-  <div class="stats">
-    <p>Score: {{ score }}</p>
-    <p>Level: {{ level }}</p>
+  <div class="score-item">
+    <span class="label">High Score:</span>
+    <span class="value high-score">{{highScore}}</span>
   </div>
-
-  <div class="game-over" *ngIf="isGameOver">
-    Game Over!
+  <div class="score-item">
+    <span class="label">Level:</span>
+    <span class="value">{{level}}</span>
+  </div>
+  <div class="score-item" *ngIf="!isGameOver">
+    <span class="label">Time:</span>
+    <span class="value">{{countdown}}</span>
   </div>
 </div> 

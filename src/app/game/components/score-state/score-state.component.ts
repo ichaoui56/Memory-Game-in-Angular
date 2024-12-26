@@ -11,4 +11,5 @@ export class ScoreStateComponent {
   @Input() level: number = 1;
   @Input() isGameOver: boolean = false;
   @Input() countdown: number = 5;
+  @Input() highScore: number = 0;
 } 
