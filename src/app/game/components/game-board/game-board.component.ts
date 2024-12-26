@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GameService } from '../../../core/services/game.service';
+import { ScoreService } from '../../../core/services/score.service';
 import { SequenceService } from '../../services/sequence/sequence.service';
 import { GameState, GameSettings, SequenceModel } from '../../../core/models';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game-board',
@@ -9,106 +12,108 @@ import { GameState, GameSettings, SequenceModel } from '../../../core/models';
   styleUrls: ['./game-board.component.css'],
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
-  // Game state
-  gameState: GameState = {
-    sequence: [],
-    userSequence: [],
-    currentLevel: 1,
-    currentScore: 0,
-    isGameOver: false,
-    isPlayback: false
-  };
+  gameState!: GameState;
+  readonly gameSettings: GameSettings;
+  private subscription: Subscription = new Subscription();
 
-  // Game settings
-  readonly gameSettings: GameSettings = {
-    initialLevel: 1,
-    pointsPerLevel: 10,
-    countdownDuration: 5,
-    animationDelay: 1000
-  };
-
-  // UI state
-  countdown: number = this.gameSettings.countdownDuration;
+  countdown: number;
   disable: boolean = true;
   activeCardIndex: number | null = null;
   private countdownInterval?: number;
+  private sequenceStartTime?: number;
 
-  constructor(private sequenceService: SequenceService) {}
+  constructor(
+    private gameService: GameService,
+    private sequenceService: SequenceService,
+    private scoreService: ScoreService
+  ) {
+    this.gameSettings = this.gameService.getGameSettings();
+    this.countdown = this.gameSettings.countdownDuration;
+  }
 
   ngOnInit(): void {
+    this.subscription.add(
+      this.gameService.getGameState().subscribe(state => {
+        this.gameState = state;
+      })
+    );
     this.startGame();
   }
 
   ngOnDestroy(): void {
     this.clearCountdown();
+    this.subscription.unsubscribe();
   }
 
-  // Game Logic Methods
-  public startGame(): void {
-    this.resetGameState();
+  startGame(): void {
+    this.gameService.resetGame();
     this.startNextLevel();
-  }
-
-  private resetGameState(): void {
-    this.gameState = {
-      sequence: [],
-      userSequence: [],
-      currentLevel: this.gameSettings.initialLevel,
-      currentScore: 0,
-      isGameOver: false,
-      isPlayback: false
-    };
-    this.sequenceService.resetGame();
   }
 
   startNextLevel(): void {
     this.disable = true;
-    this.gameState.userSequence = [];
     this.generateNewSequence();
     this.startCountdown();
     this.playSequenceAnimation();
   }
 
-  private generateNewSequence(): void {
-    this.sequenceService.ajouterCouleur();
-    this.gameState.sequence = this.sequenceService.getSequence();
-    this.gameState.sequence = this.shuffleSequence([...this.gameState.sequence]);
-  }
-
-  // Sequence Handling
   getClickedCard(card: SequenceModel): void {
-    if (this.gameState.isGameOver || this.disable) return;
-    
-    this.gameState.userSequence.push(card);
-  }
-
-  resetUserSequence(): void {
-    this.gameState.userSequence = [];
+    if (!this.gameState.isGameOver && !this.disable) {
+      this.gameService.addUserMove(card);
+    }
   }
 
   validateSequence(): void {
     const isValid = this.sequenceService.verifierReponse(this.gameState.userSequence);
-    
+
     if (isValid) {
-      this.handleCorrectSequence();
+      const timeTaken = this.calculateTimeTaken();
+      this.gameService.handleLevelComplete(timeTaken);
+      this.startNextLevel();
     } else {
-      this.triggerGameOver();
+      this.handleGameOver();
     }
   }
 
-  private handleCorrectSequence(): void {
-    this.gameState.currentLevel++;
-    this.updateScore();
-    this.startNextLevel();
+  private handleGameOver(): void {
+    this.gameService.triggerGameOver();
+    this.disable = true;
+    this.clearCountdown();
+    
+    this.scoreService.addScore({
+      finalScore: this.gameState.currentScore,
+      maxLevel: this.gameState.currentLevel,
+      timestamp: new Date()
+    });
   }
 
-  private updateScore(): void {
-    this.gameState.currentScore += this.gameSettings.pointsPerLevel;
+  private generateNewSequence(): void {
+    this.sequenceService.ajouterCouleur();
+    const sequence = this.sequenceService.getSequence();
+    const shuffledSequence = this.gameService.shuffleSequence([...sequence]);
+    this.gameService.updateState({ sequence: shuffledSequence });
   }
 
-  // Animation and UI Methods
+  // UI Methods
+  private startCountdown(): void {
+    this.clearCountdown();
+    this.countdown = this.gameSettings.countdownDuration;
+    
+    this.countdownInterval = window.setInterval(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        this.clearCountdown();
+        this.disable = false;
+        this.sequenceStartTime = Date.now();
+      }
+    }, 1000);
+  }
+
   private playSequenceAnimation(): void {
-    const sortedSequence = [...this.gameState.sequence].sort((a, b) => a.order - b.order);
+    const sortedSequence = [...this.gameState.sequence].sort(
+      (a, b) => a.order - b.order
+    );
     let index = 0;
 
     const interval = setInterval(() => {
@@ -122,18 +127,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     }, this.gameSettings.animationDelay);
   }
 
-  private startCountdown(): void {
-    this.clearCountdown();
-    this.countdown = this.gameSettings.countdownDuration;
-    
-    this.countdownInterval = window.setInterval(() => {
-      if (this.countdown > 0) {
-        this.countdown--;
-      } else {
-        this.clearCountdown();
-        this.disable = false;
-      }
-    }, 1000);
+  private calculateTimeTaken(): number {
+    if (!this.sequenceStartTime) return 0;
+    return (Date.now() - this.sequenceStartTime) / 1000;
   }
 
   private clearCountdown(): void {
@@ -142,21 +138,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private triggerGameOver(): void {
-    this.gameState.isGameOver = true;
-    this.disable = true;
-    this.clearCountdown();
-  }
-
-  private shuffleSequence(array: SequenceModel[]): SequenceModel[] {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  // Getters for template
   get score(): number {
     return this.gameState.currentScore;
   }
@@ -175,5 +156,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   get userSequence(): SequenceModel[] {
     return this.gameState.userSequence;
+  }
+
+  resetUserSequence(): void {
+    this.gameService.resetUserSequence();
   }
 }
