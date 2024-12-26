@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SequenceService } from '../../services/sequence/sequence.service';
-import { sequenceType } from '../../sequenceType';
+import { GameState, GameSettings, SequenceModel } from '../../../core/models';
 
 @Component({
   selector: 'app-game-board',
@@ -10,19 +10,28 @@ import { sequenceType } from '../../sequenceType';
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
   // Game state
-  sequence: sequenceType[] = [];
-  userSequence: sequenceType[] = [];
-  level: number = 1;
-  score: number = 0;
-  isGameOver: boolean = false;
+  gameState: GameState = {
+    sequence: [],
+    userSequence: [],
+    currentLevel: 1,
+    currentScore: 0,
+    isGameOver: false,
+    isPlayback: false
+  };
+
+  // Game settings
+  readonly gameSettings: GameSettings = {
+    initialLevel: 1,
+    pointsPerLevel: 10,
+    countdownDuration: 5,
+    animationDelay: 1000
+  };
 
   // UI state
-  countdown: number = 5;
+  countdown: number = this.gameSettings.countdownDuration;
   disable: boolean = true;
   activeCardIndex: number | null = null;
   private countdownInterval?: number;
-  private readonly COUNTDOWN_START = 5;
-  private readonly ANIMATION_DELAY = 1000;
 
   constructor(private sequenceService: SequenceService) {}
 
@@ -41,16 +50,20 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   private resetGameState(): void {
-    this.level = 1;
-    this.score = 0;
-    this.isGameOver = false;
-    this.userSequence = [];
+    this.gameState = {
+      sequence: [],
+      userSequence: [],
+      currentLevel: this.gameSettings.initialLevel,
+      currentScore: 0,
+      isGameOver: false,
+      isPlayback: false
+    };
     this.sequenceService.resetGame();
   }
 
   startNextLevel(): void {
     this.disable = true;
-    this.userSequence = [];
+    this.gameState.userSequence = [];
     this.generateNewSequence();
     this.startCountdown();
     this.playSequenceAnimation();
@@ -58,23 +71,23 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   private generateNewSequence(): void {
     this.sequenceService.ajouterCouleur();
-    this.sequence = this.sequenceService.getSequence();
-    this.sequence = this.shuffleSequence([...this.sequence]);
+    this.gameState.sequence = this.sequenceService.getSequence();
+    this.gameState.sequence = this.shuffleSequence([...this.gameState.sequence]);
   }
 
   // Sequence Handling
-  getClickedCard(card: sequenceType): void {
-    if (this.isGameOver || this.disable) return;
+  getClickedCard(card: SequenceModel): void {
+    if (this.gameState.isGameOver || this.disable) return;
     
-    this.userSequence.push(card);
+    this.gameState.userSequence.push(card);
   }
 
   resetUserSequence(): void {
-    this.userSequence = [];
+    this.gameState.userSequence = [];
   }
 
   validateSequence(): void {
-    const isValid = this.sequenceService.verifierReponse(this.userSequence);
+    const isValid = this.sequenceService.verifierReponse(this.gameState.userSequence);
     
     if (isValid) {
       this.handleCorrectSequence();
@@ -84,18 +97,18 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   private handleCorrectSequence(): void {
-    this.level++;
+    this.gameState.currentLevel++;
     this.updateScore();
     this.startNextLevel();
   }
 
   private updateScore(): void {
-    this.score += 10;
+    this.gameState.currentScore += this.gameSettings.pointsPerLevel;
   }
 
   // Animation and UI Methods
   private playSequenceAnimation(): void {
-    const sortedSequence = [...this.sequence].sort((a, b) => a.order - b.order);
+    const sortedSequence = [...this.gameState.sequence].sort((a, b) => a.order - b.order);
     let index = 0;
 
     const interval = setInterval(() => {
@@ -106,12 +119,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         clearInterval(interval);
         this.activeCardIndex = null;
       }
-    }, this.ANIMATION_DELAY);
+    }, this.gameSettings.animationDelay);
   }
 
   private startCountdown(): void {
     this.clearCountdown();
-    this.countdown = this.COUNTDOWN_START;
+    this.countdown = this.gameSettings.countdownDuration;
     
     this.countdownInterval = window.setInterval(() => {
       if (this.countdown > 0) {
@@ -130,16 +143,37 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   private triggerGameOver(): void {
-    this.isGameOver = true;
+    this.gameState.isGameOver = true;
     this.disable = true;
     this.clearCountdown();
   }
 
-  private shuffleSequence(array: sequenceType[]): sequenceType[] {
+  private shuffleSequence(array: SequenceModel[]): SequenceModel[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+  }
+
+  // Getters for template
+  get score(): number {
+    return this.gameState.currentScore;
+  }
+
+  get level(): number {
+    return this.gameState.currentLevel;
+  }
+
+  get isGameOver(): boolean {
+    return this.gameState.isGameOver;
+  }
+
+  get sequence(): SequenceModel[] {
+    return this.gameState.sequence;
+  }
+
+  get userSequence(): SequenceModel[] {
+    return this.gameState.userSequence;
   }
 }
