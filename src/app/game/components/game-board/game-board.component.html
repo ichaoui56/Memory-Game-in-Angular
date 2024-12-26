@@ -1,22 +1,19 @@
-<div class="timer">
-    <p>Time Left: {{ countdown }}s</p>
-  </div>
-  
-  <div class="card-container">
-    <div
-      *ngFor="let seq of sequence"
-      class="card"
-      [style.background-color]="seq.color"
-      (click)="getClickedCard(seq)"
-      [class.active]="seq.order === activeCardIndex"
-      [attr.disabled]="disable ? true : null">
-      {{ seq.order }} 
-    </div>
-  </div>
-  
+<div class="game-container">
+  <app-score-state
+    [score]="score"
+    [level]="level"
+    [isGameOver]="isGameOver"
+    [countdown]="countdown">
+  </app-score-state>
 
-  <div class="actions">
-    <button [attr.disabled]="disable ? true : null" (click)="validateSequence()">Validate</button>
-    <button (click)="resetUserSequence()">Reset</button>
-  </div>
+  <app-interface
+    [sequence]="sequence"
+    [disable]="disable"
+    [activeCardIndex]="activeCardIndex"
+    [userSequence]="userSequence"
+    (cardClick)="getClickedCard($event)"
+    (validateClick)="validateSequence()"
+    (resetClick)="resetUserSequence()">
+  </app-interface>
+</div>
   

@@ -1,0 +1,14 @@
+<div class="score-state">
+  <div class="timer">
+    <p>Time Left: {{ countdown }}s</p>
+  </div>
+  
+  <div class="stats">
+    <p>Score: {{ score }}</p>
+    <p>Level: {{ level }}</p>
+  </div>
+
+  <div class="game-over" *ngIf="isGameOver">
+    Game Over!
+  </div>
+</div> 

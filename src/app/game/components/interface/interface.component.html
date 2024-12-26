@@ -1,0 +1,30 @@
+<div class="game-interface">
+  <div class="card-container">
+    <div
+      *ngFor="let seq of sequence"
+      class="card"
+      [style.background-color]="seq.color"
+      (click)="onCardClick(seq)"
+      [class.active]="seq.order === activeCardIndex"
+      [class.clicked]="seq.order === isClicked"
+      [attr.disabled]="disable ? true : null">
+      
+    </div>
+  </div>
+
+  <div class="selected-sequence">
+    <h3>Your Sequence:</h3>
+    <div class="selected-colors">
+      <div
+        *ngFor="let seq of userSequence"
+        class="selected-color"
+        [style.background-color]="seq.color">
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button [attr.disabled]="disable ? true : null" (click)="validateClick.emit()">Validate</button>
+    <button (click)="resetClick.emit()">Reset</button>
+  </div>
+</div> 
