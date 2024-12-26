@@ -1,0 +1,22 @@
+<div class="timer">
+    <p>Time Left: {{ countdown }}s</p>
+  </div>
+  
+  <div class="card-container">
+    <div
+      *ngFor="let seq of sequence"
+      class="card"
+      [style.background-color]="seq.color"
+      (click)="getClickedCard(seq)"
+      [class.active]="seq.order === activeCardIndex"
+      [attr.disabled]="disable ? true : null">
+      {{ seq.order }} 
+    </div>
+  </div>
+  
+
+  <div class="actions">
+    <button [attr.disabled]="disable ? true : null" (click)="validateSequence()">Validate</button>
+    <button (click)="resetUserSequence()">Reset</button>
+  </div>
+  

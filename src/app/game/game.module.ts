@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { GameRoutingModule } from './game-routing.module';
 import { GameBoardComponent } from './components/game-board/game-board.component';
-import { SequenceDisplayComponent } from './components/sequence-display/sequence-display.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 @NgModule({
   declarations: [
+    GameBoardComponent
   ],
   imports: [
-    GameBoardComponent,
-    SequenceDisplayComponent,
     CommonModule,
-    GameRoutingModule
+    BrowserAnimationsModule
   ]
 })
 export class GameModule { }
