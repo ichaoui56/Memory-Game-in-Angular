@@ -1,0 +1,10 @@
+<div class="popup-overlay" *ngIf="isVisible">
+  <div class="popup-content">
+    <h2>Game Over!</h2>
+    <div class="results">
+      <p>Final Score: <span>{{score}}</span></p>
+      <p>Level Reached: <span>{{level}}</span></p>
+    </div>
+    <button class="start-again" (click)="startAgain.emit()">Play Again</button>
+  </div>
+</div> 

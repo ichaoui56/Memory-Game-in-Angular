@@ -17,5 +17,12 @@
     (resetClick)="resetUserSequence()"
     (startAgainClick)="startGame()">
   </app-interface>
+
+  <app-game-over-popup
+    [score]="score"
+    [level]="level"
+    [isVisible]="isGameOver"
+    (startAgain)="startGame()">
+  </app-game-over-popup>
 </div>
   
