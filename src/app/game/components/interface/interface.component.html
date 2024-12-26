@@ -7,7 +7,7 @@
       (click)="onCardClick(seq)"
       [class.active]="seq.order === activeCardIndex"
       [class.clicked]="seq.order === isClicked"
-      [attr.disabled]="disable ? true : null">
+      [attr.disabled]="disable ? '' : null">
       
     </div>
   </div>
@@ -24,7 +24,12 @@
   </div>
 
   <div class="actions">
-    <button [attr.disabled]="disable ? true : null" (click)="validateClick.emit()">Validate</button>
-    <button (click)="resetClick.emit()">Reset</button>
+    <ng-container *ngIf="!isGameOver; else gameOverButtons">
+      <button [attr.disabled]="disable ? true : null" (click)="validateClick.emit()">Validate</button>
+      <button (click)="resetClick.emit()">Reset</button>
+    </ng-container>
+    <ng-template #gameOverButtons>
+      <button class="start-again" (click)="startAgainClick.emit()">Start Again</button>
+    </ng-template>
   </div>
 </div> 

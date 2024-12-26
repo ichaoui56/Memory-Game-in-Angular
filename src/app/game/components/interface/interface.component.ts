@@ -12,9 +12,11 @@ export class InterfaceComponent {
   @Input() disable: boolean = true;
   @Input() activeCardIndex: number | null = null;
   @Input() userSequence: sequenceType[] = [];
+  @Input() isGameOver: boolean = false;
   @Output() cardClick = new EventEmitter<sequenceType>();
   @Output() validateClick = new EventEmitter<void>();
   @Output() resetClick = new EventEmitter<void>();
+  @Output() startAgainClick = new EventEmitter<void>();
 
   isClicked: number | null = null;
 

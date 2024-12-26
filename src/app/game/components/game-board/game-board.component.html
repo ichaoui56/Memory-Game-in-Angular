@@ -11,9 +11,11 @@
     [disable]="disable"
     [activeCardIndex]="activeCardIndex"
     [userSequence]="userSequence"
+    [isGameOver]="isGameOver"
     (cardClick)="getClickedCard($event)"
     (validateClick)="validateSequence()"
-    (resetClick)="resetUserSequence()">
+    (resetClick)="resetUserSequence()"
+    (startAgainClick)="startGame()">
   </app-interface>
 </div>
   

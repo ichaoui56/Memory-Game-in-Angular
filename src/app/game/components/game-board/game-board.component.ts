@@ -35,7 +35,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   // Game Logic Methods
-  private startGame(): void {
+  public startGame(): void {
     this.resetGameState();
     this.startNextLevel();
   }
