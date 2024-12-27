@@ -35,6 +35,6 @@ export class HomeComponent {
   }
 
   startGame(): void {
-    this.router.navigate(['/game']);
+    this.router.navigate(['/game'], { skipLocationChange: false });
   }
 }
