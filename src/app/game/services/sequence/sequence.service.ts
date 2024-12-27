@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { sequenceType } from '../../sequenceType';
+import { SequenceModel } from '../../../core/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SequenceService {
-  private sequence: sequenceType[] = [];
+  private sequence: SequenceModel[] = [];
   private hexCharacters: string[] = [
     '0',
     '1',
@@ -28,7 +28,7 @@ export class SequenceService {
 
   constructor() {}
 
-  getSequence(): sequenceType[] {
+  getSequence(): SequenceModel[] {
     return [...this.sequence];
   }
 
@@ -39,7 +39,7 @@ export class SequenceService {
     });
   }
 
-  verifierReponse(userSequence: sequenceType[]): boolean {
+  verifierReponse(userSequence: SequenceModel[]): boolean {
     if (userSequence.length !== this.sequence.length) {
       return false;
     }
