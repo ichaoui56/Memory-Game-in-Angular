@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,27 +7,34 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
-  playerName: string | null = null;
+export class HomeComponent {
   inputName: string = '';
+  playerName: string | null = null;
 
-  constructor(private router: Router) {}
+  private rules = [
+    'Watch the sequence of colors carefully as they light up',
+    'Memorize the order of the sequence',
+    'Replicate the sequence by clicking the colors in the same order',
+    'Complete the sequence before the timer runs out',
+    'Each successful round increases difficulty and score'
+  ];
 
-  ngOnInit() {
-    // Check if name exists in localStorage
+  constructor(private router: Router) {
     this.playerName = localStorage.getItem('playerName');
   }
 
-  saveName() {
+  getRuleText(index: number): string {
+    return this.rules[index - 1];
+  }
+
+  saveName(): void {
     if (this.inputName.trim()) {
-      this.playerName = this.inputName;
-      localStorage.setItem('playerName', this.inputName);
+      this.playerName = this.inputName.trim();
+      localStorage.setItem('playerName', this.playerName);
     }
   }
 
-  startGame() {
-    if (this.playerName) {
-      this.router.navigate(['/game']);
-    }
+  startGame(): void {
+    this.router.navigate(['/game']);
   }
 }

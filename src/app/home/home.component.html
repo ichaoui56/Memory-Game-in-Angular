@@ -1,45 +1,32 @@
 <div class="retro-container">
   <div id="overlay">
-    <h1 class="cyber-title">Memory Game</h1>
+    <h1 class="glitch-text" data-text="MEMORY SEQUENCE">MEMORY SEQUENCE</h1>
     
-    <!-- Name Input Section -->
-    <div class="input-section" *ngIf="!playerName">
-      <div class="cyber-frame">
-        <input type="text" 
-               [(ngModel)]="inputName" 
-               placeholder="ENTER YOUR CODENAME"
-               class="cyber-input"
-               [maxLength]="15">
-        <button (click)="saveName()" 
-                class="cyber-button"
-                [disabled]="!inputName.trim()">
-          <span class="button-content">INITIALIZE</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Game Start Section -->
-    <div class="game-section" *ngIf="playerName">
-      <div class="mission-brief">
-        <div class="brief-content">
-          <p>MISSION STATUS: READY</p>
-          <p>OBJECTIVE: NAVIGATE THE NEURAL MAZE</p>
-          <button (click)="startGame()" class="start-button">
-            BEGIN MISSION
-          </button>
+    <!-- Rules Section -->
+    <div class="rules-section cyber-frame animate-in">
+      <h2 class="cyber-text">MISSION BRIEFING</h2>
+      <div class="rules-content">
+        <div class="rule-item" *ngFor="let i of [1,2,3,4,5]; let idx = index" 
+             [style.animation-delay]="idx * 0.2 + 's'">
+          <span class="rule-number">0{{i}}</span>
+          <p>{{getRuleText(i)}}</p>
         </div>
+      </div>
+      
+      <!-- Join Button -->
+      <div class="join-section">
+        <button (click)="startGame()" class="cyber-button glow-effect">
+          <span>JOIN MISSION</span>
+          <div class="glow-container">
+            <div class="glow"></div>
+          </div>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Retro Grid Background -->
-  <div id="layer-0">
-    <div id="layer-1">
-      <div id="layer-2">
-        <div id="lines">
-          <div id="layer-corner"></div>
-        </div>
-      </div>
-    </div>
+  <!-- Background Grid -->
+  <div class="grid-background">
+    <div class="grid"></div>
   </div>
 </div>
