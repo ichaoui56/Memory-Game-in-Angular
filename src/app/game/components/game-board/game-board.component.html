@@ -1,29 +1,47 @@
-<div class="game-container">
-  <app-score-state
-    [score]="score"
-    [level]="level"
-    [isGameOver]="isGameOver"
-    [countdown]="countdown"
-    [highScore]="highScore">
-  </app-score-state>
+<div class="retro-container">
+  <div id="overlay">
+    <div class="game-content">
+      <!-- Score Panel -->
+      <app-score-state
+        [score]="score"
+        [level]="level"
+        [isGameOver]="isGameOver"
+        [countdown]="countdown"
+        [highScore]="highScore">
+      </app-score-state>
 
-  <app-interface
-    [sequence]="sequence"
-    [disable]="disable"
-    [activeCardIndex]="activeCardIndex"
-    [userSequence]="userSequence"
-    [isGameOver]="isGameOver"
-    (cardClick)="getClickedCard($event)"
-    (validateClick)="validateSequence()"
-    (resetClick)="resetUserSequence()"
-    (startAgainClick)="startGame()">
-  </app-interface>
+      <!-- Game Interface -->
+      <app-interface
+        [sequence]="sequence"
+        [disable]="disable"
+        [activeCardIndex]="activeCardIndex"
+        [userSequence]="userSequence"
+        [isGameOver]="isGameOver"
+        (cardClick)="getClickedCard($event)"
+        (validateClick)="validateSequence()"
+        (resetClick)="resetUserSequence()"
+        (startAgainClick)="startGame()">
+      </app-interface>
+    </div>
+  </div>
 
+  <!-- Add Game Over Popup -->
   <app-game-over-popup
+    [isVisible]="isGameOver"
     [score]="score"
     [level]="level"
-    [isVisible]="isGameOver"
-    (startAgain)="startGame()">
+    (restart)="startGame()">
   </app-game-over-popup>
+
+  <!-- Retro Grid Background -->
+  <div id="layer-0">
+    <div id="layer-1">
+      <div id="layer-2">
+        <div id="lines">
+          <div id="layer-corner"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
   

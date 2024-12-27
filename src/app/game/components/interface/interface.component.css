@@ -1,148 +1,330 @@
-.game-interface {
+.cyber-frame {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 2rem;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #47ffcb;
+  border-radius: 4px;
 }
 
-.card-container {
-  display: flex;
-  gap: 10px;
-}
-
-.card {
-  width: 100px;
-  height: 100px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
+/* Sequence Grid */
+.sequence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transform-origin: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+.cyber-card {
+  aspect-ratio: 1;
   position: relative;
+  cursor: pointer;
+  perspective: 1000px;
+  min-height: 120px;
 }
 
-.card[disabled] {
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border: 3px solid #47ffcb;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.card-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, 
+    rgba(71, 255, 203, 0.3) 0%, 
+    rgba(71, 255, 203, 0.1) 50%, 
+    transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 4px;
+}
+
+.cyber-card:hover:not([disabled]) .card-glow {
+  opacity: 1;
+}
+
+.cyber-card.active .card-inner {
+  transform: scale(1.1);
+  animation: highlightCard 1s ease-out;
+}
+
+.cyber-card[disabled] {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.card[disabled]:hover::after {
+/* User Sequence Tracker */
+.sequence-tracker {
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #47ffcb;
+  border-radius: 4px;
+  max-width: 800px;
+}
+
+.cyber-text {
+  color: #47ffcb;
+  font-family: 'Orbitron', monospace;
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.selected-sequence {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  min-height: 60px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.mini-card {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #47ffcb;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.mini-card.empty {
+  background: rgba(71, 255, 203, 0.1);
+}
+
+.mini-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: 0 0 10px currentColor;
+  animation: pulseGlow 1.5s infinite alternate;
+  mix-blend-mode: overlay;
+}
+
+.slot-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #47ffcb;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes highlightCard {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(71, 255, 203, 0);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 40px rgba(71, 255, 203, 0.8);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(71, 255, 203, 0.5);
+  }
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 5px currentColor; }
+  to { box-shadow: 0 0 15px currentColor; }
+}
+
+/* Add blocked state styles */
+.cyber-card[disabled]::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  pointer-events: none;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  border-radius: 4px 0.3s ease;
 }
 
-.card[disabled]:hover::before {
-  content: '⌛';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  color: #666;
-  z-index: 1;
+.cyber-card[disabled]:hover::before {
+  opacity: 1;
 }
 
-.card.active {
-  animation: highlight 1s ease-out;
+/* Remove the WAIT text */
+.cyber-card[disabled]::after {
+  display: none;
 }
 
-.card.clicked {
-  animation: click 0.2s ease-out;
+/* Add responsive adjustments */
+@media (max-width: 768px) {
+  .sequence-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .cyber-card {
+    min-height: 100px;
+  }
+
+  .mini-card {
+    width: 40px;
+    height: 40px;
+  }
 }
 
-.selected-sequence {
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.selected-colors {
+/* Add styles for the game over popup */
+.game-over-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+/* Add game over popup styles */;
   display: flex;
-  gap: 10px;
   justify-content: center;
-  min-height: 40px;
-  padding: 10px;
-  background: #f5f5f5;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid #47ffcb;
+  padding: 2rem;
   border-radius: 8px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
 }
 
-.selected-color {
-  width: 40px;
-  height: 40px;
+.popup-title {
+  color: #FF11A7;
+  font-family: 'Monoton', monospace;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  animation: neon1 1.5s ease-in-out infinite alternate;
+}
+
+.popup-stats {
+  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  background: rgba(71, 255, 203, 0.1);
+  padding: 1rem;
+  border: 1px solid #47ffcb;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes highlight {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.stat-label {
+  color: #47ffcb;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
-@keyframes click {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
+.stat-value {
+  color: #fff;
+  font-size: 1.5rem;
 }
 
-.actions {
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+  }
+/* Update controls section */
+.controls {
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 1rem;
 }
 
-.actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #4CAF50;
-  color: white;
+.cyber-button {
+  background: transparent;
+  border: 2px solid #47ffcb;
+  color: #47ffcb;
+  padding: 1rem 3rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
 }
 
-.actions button:disabled {
-  background-color: #cccccc;
+.cyber-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(71, 255, 203, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.cyber-button:hover::before {
+  left: 100%;
+}
+
+.cyber-button:hover {
+  background: #47ffcb;
+  color: #000;
+  box-shadow: 0 0 20px #47ffcb;
+  transform: translateY(-2px);
+}
+
+.cyber-button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-.actions button:hover:not(:disabled) {
-  background-color: #45a049;
+/* Add pulsing effect to buttons */
+@keyframes buttonPulse {
+  0% { box-shadow: 0 0 0 0 rgba(71, 255, 203, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(71, 255, 203, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(71, 255, 203, 0); }
 }
 
-.start-again {
-  padding: 12px 24px !important;
-  font-size: 1.2em !important;
-  background-color: #2196F3 !important;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.start-again:hover {
-  background-color: #1976D2 !important;
-} 
+.cyber-button:not(:disabled) {
+  animation: buttonPulse 2s infinite;
+} to { opacity: 1; }

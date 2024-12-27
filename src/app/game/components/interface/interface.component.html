@@ -1,35 +1,56 @@
-<div class="game-interface">
-  <div class="card-container">
-    <div
-      *ngFor="let seq of sequence"
-      class="card"
-      [style.background-color]="seq.color"
-      (click)="onCardClick(seq)"
-      [class.active]="seq.order === activeCardIndex"
-      [class.clicked]="seq.order === isClicked"
-      [attr.disabled]="disable ? '' : null">
-      
-    </div>
-  </div>
-
-  <div class="selected-sequence">
-    <h3>Your Sequence:</h3>
-    <div class="selected-colors">
-      <div
-        *ngFor="let seq of userSequence"
-        class="selected-color"
-        [style.background-color]="seq.color">
+<div class="cyber-frame">
+  <!-- Sequence Display -->
+  <div class="sequence-grid">
+    <div *ngFor="let seq of sequence"
+         class="cyber-card"
+         [class.active]="seq.order === activeCardIndex"
+         [class.clicked]="seq.order === isClicked"
+         [attr.disabled]="disable ? '' : null"
+         (click)="onCardClick(seq)">
+      <div class="card-inner">
+        <div class="card-content" [style.background-color]="seq.color">
+          <div class="card-glow"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="actions">
+  <!-- User Sequence Display -->
+  <div class="sequence-tracker">
+    <h3 class="cyber-text">YOUR SEQUENCE</h3>
+    <div class="selected-sequence">
+      <div *ngFor="let seq of userSequence"
+           class="mini-card"
+           [style.background-color]="seq.color">
+        <div class="mini-glow"></div>
+      </div>
+      <!-- Show remaining slots -->
+      <div *ngFor="let empty of getEmptySlots()"
+           class="mini-card empty">
+        <div class="slot-marker"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
     <ng-container *ngIf="!isGameOver; else gameOverButtons">
-      <button [attr.disabled]="disable ? true : null" (click)="validateClick.emit()">Validate</button>
-      <button (click)="resetClick.emit()">Reset</button>
+      <button class="cyber-button" 
+              [disabled]="disable || userSequence.length === 0"
+              (click)="validateClick.emit()">
+        VALIDATE
+      </button>
+      <button class="cyber-button" 
+              [disabled]="userSequence.length === 0"
+              (click)="resetClick.emit()">
+        RESET
+      </button>
     </ng-container>
     <ng-template #gameOverButtons>
-      <button class="start-again" (click)="startAgainClick.emit()">Start Again</button>
+      <button class="cyber-button highlight" 
+              (click)="startAgainClick.emit()">
+        START AGAIN
+      </button>
     </ng-template>
   </div>
 </div> 

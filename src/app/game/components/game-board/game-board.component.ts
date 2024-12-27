@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { GameService } from '../../../core/services/game.service';
 import { ScoreService } from '../../../core/services/score.service';
 import { SequenceService } from '../../services/sequence/sequence.service';
@@ -22,15 +23,25 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   private countdownInterval?: number;
   private sequenceStartTime?: number;
   highScore: number = 0;
+  playerName: string | null = null;
+  currentScore: number = 0;
+  currentLevel: number = 1;
+  showModal: boolean = false;
+  cards: any[] = []; // Replace with your card interface
 
   constructor(
     private gameService: GameService,
     private sequenceService: SequenceService,
-    private scoreService: ScoreService
+    private scoreService: ScoreService,
+    private router: Router
   ) {
     this.gameSettings = this.gameService.getGameSettings();
     this.countdown = this.gameSettings.countdownDuration;
     this.highScore = this.scoreService.getCurrentHighScore();
+    this.playerName = localStorage.getItem('playerName');
+    if (!this.playerName) {
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnInit(): void {
@@ -172,5 +183,21 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   resetUserSequence(): void {
     this.gameService.resetUserSequence();
+  }
+
+  onCardClick(index: number) {
+    // Handle card click logic
+  }
+
+  restartGame() {
+    this.startGame();
+  }
+
+  showInstructions() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 }

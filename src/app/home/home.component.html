@@ -1,0 +1,45 @@
+<div class="retro-container">
+  <div id="overlay">
+    <h1 class="cyber-title">Memory Game</h1>
+    
+    <!-- Name Input Section -->
+    <div class="input-section" *ngIf="!playerName">
+      <div class="cyber-frame">
+        <input type="text" 
+               [(ngModel)]="inputName" 
+               placeholder="ENTER YOUR CODENAME"
+               class="cyber-input"
+               [maxLength]="15">
+        <button (click)="saveName()" 
+                class="cyber-button"
+                [disabled]="!inputName.trim()">
+          <span class="button-content">INITIALIZE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Start Section -->
+    <div class="game-section" *ngIf="playerName">
+      <div class="mission-brief">
+        <div class="brief-content">
+          <p>MISSION STATUS: READY</p>
+          <p>OBJECTIVE: NAVIGATE THE NEURAL MAZE</p>
+          <button (click)="startGame()" class="start-button">
+            BEGIN MISSION
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retro Grid Background -->
+  <div id="layer-0">
+    <div id="layer-1">
+      <div id="layer-2">
+        <div id="lines">
+          <div id="layer-corner"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

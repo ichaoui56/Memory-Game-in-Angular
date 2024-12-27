@@ -1,18 +1,20 @@
-<div class="score-container">
-  <div class="score-item">
-    <span class="label">Score:</span>
-    <span class="value">{{score}}</span>
-  </div>
-  <div class="score-item">
-    <span class="label">High Score:</span>
-    <span class="value high-score">{{highScore}}</span>
-  </div>
-  <div class="score-item">
-    <span class="label">Level:</span>
-    <span class="value">{{level}}</span>
-  </div>
-  <div class="score-item" *ngIf="!isGameOver">
-    <span class="label">Time:</span>
-    <span class="value">{{countdown}}</span>
+<div class="score-panel cyber-frame">
+  <div class="score-grid">
+    <div class="score-item">
+      <div class="score-label">LEVEL</div>
+      <div class="score-value">{{level}}</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">SCORE</div>
+      <div class="score-value">{{score}}</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">HIGH SCORE</div>
+      <div class="score-value highlight">{{highScore}}</div>
+    </div>
+    <div class="score-item" *ngIf="!isGameOver">
+      <div class="score-label">TIME</div>
+      <div class="score-value countdown">{{countdown}}</div>
+    </div>
   </div>
 </div> 
