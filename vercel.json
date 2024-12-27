@@ -5,5 +5,10 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/memory-game-ng/browser",
+  "installCommand": "npm install",
+  "framework": "angular",
+  "public": true
 } 
