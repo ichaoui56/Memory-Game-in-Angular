@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +7,7 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  inputName: string = '';
-  playerName: string | null = null;
+  @Output() startGameEvent = new EventEmitter<void>();
 
   private rules = [
     'Watch the sequence of colors carefully as they light up',
@@ -19,22 +17,11 @@ export class HomeComponent {
     'Each successful round increases difficulty and score'
   ];
 
-  constructor(private router: Router) {
-    this.playerName = localStorage.getItem('playerName');
-  }
-
   getRuleText(index: number): string {
     return this.rules[index - 1];
   }
 
-  saveName(): void {
-    if (this.inputName.trim()) {
-      this.playerName = this.inputName.trim();
-      localStorage.setItem('playerName', this.playerName);
-    }
-  }
-
   startGame(): void {
-    this.router.navigate(['/game'], { skipLocationChange: false });
+    this.startGameEvent.emit();
   }
 }
