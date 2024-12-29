@@ -18,7 +18,7 @@ export class GameService {
   private readonly gameSettings: GameSettings = {
     initialLevel: 1,
     basePointsPerLevel: 10,
-    countdownDuration: 2,
+    countdownDuration: 8,
     animationDelay: 1000,
     timeBonus: {
       fast: 2.0,
