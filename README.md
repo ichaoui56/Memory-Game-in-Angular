@@ -1,59 +1,89 @@
-# MemoryGameNg
+# Memory Game
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 18.
+## Project Description
+The Memory Game is an interactive web application where players challenge their memory by reproducing sequences of colors. Each level introduces a more complex sequence, with a new color added at every stage. The game emphasizes speed and accuracy, making it both engaging and challenging. Developed using Angular, the project leverages modern web technologies to provide an immersive user experience with animations and a responsive interface.
 
-## Development server
+## Features
+1. **Interactive Gameplay**:
+   - Start the game by clicking the "Commencer" button.
+   - Memorize sequences of colors displayed for 15 seconds.
+   - Reproduce the sequence by clicking color buttons in the correct order.
+   - Validate or reset your choices.
+2. **Progression System**:
+   - Levels increase in difficulty as new colors are added to the sequence.
+   - Game ends if a mistake is made, displaying the final score.
+3. **Score Calculation**:
+   - Scores are based on accuracy and speed.
+   - Higher levels and faster responses yield better scores.
+4. **Dynamic Animations**:
+   - Color buttons flash or zoom during sequence displays.
+   - User actions trigger interactive visual feedback.
 
-To start a local development server, run:
+## Technologies Used
+- Angular (version 15+)
+- HTML5 / CSS3
+- TypeScript
+- RxJS
+- @angular/animations
+- Angular CLI
 
-```bash
-ng serve
-```
+## How to Play
+1. **Start the Game**:
+   - Click the "Commencer" button to begin.
+   - A sequence of two colors is displayed for 15 seconds. Memorize it.
+2. **Reproduce the Sequence**:
+   - After the display, color buttons reappear.
+   - Click the buttons in the correct order to replicate the sequence.
+3. **Validate or Reset**:
+   - Click "Valider" to submit your answer.
+   - Use "Réinitialiser" to start over if needed.
+4. **Advance Through Levels**:
+   - Correctly replicate the sequence to proceed to the next level.
+   - Each new level adds one more color to the sequence.
+5. **Game Over**:
+   - A mistake ends the game, showing the final score and restart options.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Installation and Setup
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd memory-game
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the development server:
+   ```bash
+   ng serve
+   ```
+5. Open the application in your browser at:
+   ```
+   http://localhost:4200
+   ```
 
-## Code scaffolding
+## Project Structure
+- **Components**:
+  - Game Component: Manages game logic and interactions.
+  - Interface Component: Displays color buttons and controls.
+  - Score/Status Component: Shows score, level, and game status.
+- **Services**:
+  - Game Service: Handles sequence generation, validation, scoring, and state management.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Key Methods in Game Service
+- `genererSequence()`: Generates a new random color sequence.
+- `ajouterCouleur()`: Adds a new color to the existing sequence.
+- `verifierReponse()`: Compares the user's input with the sequence.
+- `resetGame()`: Resets the game for a new round.
 
-```bash
-ng generate component component-name
-```
+## Future Enhancements
+- Add sound effects for user interactions and sequence displays.
+- Introduce difficulty settings (e.g., faster sequence display times).
+- Implement user authentication to track high scores globally.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Acknowledgments
+Special thanks to the Angular community and contributors for their comprehensive documentation and tools that made this project possible.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
